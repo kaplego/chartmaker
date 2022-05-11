@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChartMaker</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="/icons/css/all.css">
+    <link rel="stylesheet" href="code/theme.css">
+
+    <script src="chartjs.min.js"></script>
+    <script src="code/rainbow-custom.js"></script>
+    <!-- <script src="code/languages/all.js"></script> -->
+</head>
+
+<body>
+    <div id="chartcontainer">
+        <canvas id="chart"></canvas>
+    </div>
+    <div id="jscode">
+        <pre><code class="language-json"></code></pre>
+    </div>
+    <div id="form">
+        <select-menu id="chart-type">
+            <div class="select-btn input">
+                <span class="placeholder">Chart type</span><i class="far fa-chevron-down"></i>
+            </div>
+
+            <ul class="options">
+                <li class="option" data-value="line" data-selected>
+                    <i class="fas fa-chart-line"></i> Line chart
+                </li>
+                <li class="option" data-value="bar" data-disabled>
+                    <i class="fas fa-chart-column"></i> Bar chart
+                </li>
+                <li class="option" data-value="pie" data-disabled>
+                    <i class="fas fa-chart-pie"></i> Pie chart
+                </li>
+            </ul>
+        </select-menu>
+        <div class="input-row">
+            <input type="text" id="addlabelname" placeholder="Label name" class="input">
+            <button id="addlabel" class="input">Add</button>
+        </div>
+        <div id="data">
+
+        </div>
+
+        <button id="update" type="button" class="input">Update chart</button>
+    </div>
+
+    <script src="def.js"></script>
+    <script src="selectMenus.js"></script>
+    <script src="index.js"></script>
+    <script src="chart.js"></script>
+</body>
+
+</html>

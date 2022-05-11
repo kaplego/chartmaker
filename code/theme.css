@@ -1,0 +1,126 @@
+/*
+
+Atom One Dark by Daniel Gamage
+Original One Dark Syntax theme from https://github.com/atom/one-dark-syntax
+
+base:    #282c34
+mono-1:  #abb2bf
+mono-2:  #818896
+mono-3:  #5c6370
+hue-1:   #56b6c2
+hue-2:   #61aeee
+hue-3:   #c678dd
+hue-4:   #98c379
+hue-5:   #e06c75
+hue-5-2: #be5046
+hue-6:   #d19a66
+hue-6-2: #e6c07b
+
+comments:               #6A9955
+constants, enums:       #4FC1FF
+constants:              #569cd6
+keywords, operators:    #C586C0
+regexs, groups:         #CE9178
+regex-identifiers:      #d16969
+
+strings:                #ce9178
+numbers:                #b5cea8
+
+css:
+    property-value: #CE9178
+
+*/
+
+:root {
+    --rh-comments: #6A9955;
+    --rh-enums_const: #4FC1FF;
+    --rh-storage: #569CD6;
+    --rh-keywords: #C586C0;
+    --rh-regeps: #CE9178;
+    --rh-regexp-identifiers: #D16969;
+    --rh-functions_escape: #DCDCAA;
+    --rh-strings: #CE9178;
+    --rh-numeric: #B5CEA8;
+    --rh-var: #9CDCFE;
+    --rh-key: #9CDCFE;
+    --rh-css-propertyValue: #CE9178;
+    --rh-brackets-yellow: #ffd700;
+    --rh-brackets-purple: #da70d6;
+    --rh-brackets-blue: #179fff;
+}
+
+.rainbow .comment {
+    color: var(--rh-comments);
+}
+
+.rainbow .keyword:not(.operator) {
+    color: var(--rh-keywords);
+}
+
+.rainbow .string {
+    color: var(--rh-strings);
+}
+
+.rainbow .regexp,
+.rainbow .regexp.open,
+.rainbow .regexp.close {
+    color: var(--rh-regeps);
+}
+
+.rainbow .regexp.modifier {
+    color: var(--rh-regexp-identifiers);
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
+
+.hljs-link {
+    text-decoration: underline;
+}
+
+.rainbow .storage,
+.rainbow .storage.type,
+.rainbow .storage.function,
+.rainbow .storage.jsdoc,
+.rainbow .constant.language {
+    color: var(--rh-storage);
+}
+
+.rainbow .function.name,
+.rainbow .function.call,
+.rainbow .character.escape {
+    color: var(--rh-functions_escape);
+}
+
+.rainbow .constant.numeric {
+    color: #b5cea8;
+}
+
+.rainbow .const {
+    color: var(--rh-enums_const);
+}
+
+.rainbow .var {
+    color: var(--rh-var);
+}
+
+.rainbow .jsonkey {
+    color: var(--rh-key);
+}
+
+.rainbow .brackets1 {
+    color: var(--rh-brackets-yellow);
+}
+
+.rainbow .brackets2 {
+    color: var(--rh-brackets-blue);
+}
+
+.rainbow .brackets3 {
+    color: var(--rh-brackets-purple);
+}
