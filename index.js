@@ -43,88 +43,92 @@ window.addEventListener("load", () => {
 
         /** @type {HTMLInputElement} */
         var inp = document.getElementById("addlabelname");
-        const name = inp.innerText;
+        var name = inp.innerText;
 
-        if (name !== "" && !code.data.labels.includes(name)) {
-            code.data.labels.push(name);
+        if (code.data.labels.includes(name)) return;
+        code.data.labels.push(name);
 
-            var row = document.createElement("tr");
-            row.id = "labelrow-" + name;
-            var element = document.createElement("td");
-            element.classList.add("label", "editable-cell");
-            element.id = `entry-${name.toLowerCase().replace(" ", "-").replace(/[^A-Za-z0-9-]/ig, '')}`;
-            element.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="remove">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
+        var row = document.createElement("tr");
+        row.id = "labelrow-" + name;
+        var element = document.createElement("td");
+        element.classList.add("label", "editable-cell");
+        element.id = `entry-${name.toLowerCase().replace(" ", "-").replace(/[^A-Za-z0-9-]/ig, '')}`;
+        element.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="remove">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
 
-            element.querySelector("button.remove").addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopImmediatePropagation();
+        element.querySelector("button.remove").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
 
-                if (confirm("Are you sure to delete this label ?")) {
-                    /** @type {HTMLDivElement} */
-                    var target = e.target;
-                    const name = target.previousElementSibling.innerText;
+            if (confirm("Are you sure to delete this label ?")) {
+                /** @type {HTMLDivElement} */
+                var target = e.target;
+                const name = target.previousElementSibling.innerText;
 
-                    const i = code.data.labels.findIndex(l => l === name);
+                const i = code.data.labels.findIndex(l => l === name);
 
-                    if (i >= 0) {
-                        code.data.labels.splice(i, 1);
-                        code.data.datasets.forEach(d => {
-                            d.data.splice(i, 1);
-                        });
+                if (i >= 0) {
+                    code.data.labels.splice(i, 1);
+                    code.data.datasets.forEach(d => {
+                        d.data.splice(i, 1);
+                    });
 
-                        if (table.querySelector("tbody").childElementCount === 1) table.classList.add("hide");
-                        row.remove();
-                    }
+                    if (table.querySelector("tbody").childElementCount === 1) table.classList.add("hide");
+                    row.remove();
                 }
-            });
-            element.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
+            }
+        });
+        element.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
+            /** @type {HTMLDivElement} */
+            var target = e.target;
+            target.parentElement.querySelector(".loading").classList.remove("hide");
+            var value = target.innerText.replace(/(^(\s*)|(\s*)$)/gm, '');
+            target.innerText = value;
+
+            var lb = code.data.labels.find(lb => lb === name);
+            if (lb !== undefined && lb !== value && !code.data.labels.includes(value)) {
+                code.data.labels[code.data.labels.findIndex(lb => lb === name)] = value;
+                name = value;
+            } else if (code.data.labels.includes(value)) {
+                target.innerText = name;
+            }
+            await sleep(100);
+            target.parentElement.querySelector(".loading").classList.add("hide");
+            chart = updateCode(code, chart);
+        });
+
+        row.appendChild(element);
+
+        code.data.datasets.forEach(d => {
+            d.data.push(name === "aab" ? 1 : 0);
+
+            let c = document.createElement("td");
+            c.classList.add("editable-cell");
+            c.innerHTML = `<div role="textbox" contenteditable spellcheck="false">0</div><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
+            c.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
                 /** @type {HTMLDivElement} */
                 var target = e.target;
                 target.parentElement.querySelector(".loading").classList.remove("hide");
+                const dsname = d.label;
+                const lbname = name;
                 var value = target.innerText;
 
-                var lb = code.data.labels.find(lb => lb === name);
-                if (lb !== undefined && lb !== value && !code.data.labels.includes(value)) {
-                    code.data.labels[code.data.labels.findIndex(lb => lb === name)] = value;
+                var ds = code.data.datasets.find(ds => ds.label === dsname);
+                if (ds !== undefined && !Number.isNaN(Number(value)) && ds.data[code.data.labels.findIndex(l => l === lbname)] !== Number(value)) {
+                    code.data.datasets.find(ds => ds.label === dsname).data[code.data.labels.findIndex(l => l === lbname)] = Number(value);
+                    target.innerText = Number(value).toString();
                 }
                 await sleep(100);
                 target.parentElement.querySelector(".loading").classList.add("hide");
                 chart = updateCode(code, chart);
             });
+            row.appendChild(c);
+        });
+        row.appendChild(document.createElement("td"));
 
-            row.appendChild(element);
+        document.querySelector("#data>tbody").appendChild(row);
 
-            code.data.datasets.forEach(d => {
-                d.data.push(name === "aab" ? 1 : 0);
+        inp.innerText = "";
 
-                let c = document.createElement("td");
-                c.classList.add("editable-cell");
-                c.innerHTML = `<div role="textbox" contenteditable spellcheck="false">0</div><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
-                c.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
-                    /** @type {HTMLDivElement} */
-                    var target = e.target;
-                    target.parentElement.querySelector(".loading").classList.remove("hide");
-                    const dsname = d.label;
-                    const lbname = name;
-                    var value = target.innerText;
-
-                    var ds = code.data.datasets.find(ds => ds.label === dsname);
-                    if (ds !== undefined && !Number.isNaN(Number(value)) && ds.data[code.data.labels.findIndex(l => l === lbname)] !== Number(value)) {
-                        code.data.datasets.find(ds => ds.label === dsname).data[code.data.labels.findIndex(l => l === lbname)] = Number(value);
-                        target.innerText = Number(value).toString();
-                    }
-                    await sleep(100);
-                    target.parentElement.querySelector(".loading").classList.add("hide");
-                    chart = updateCode(code, chart);
-                });
-                row.appendChild(c);
-            });
-            row.appendChild(document.createElement("td"));
-
-            document.querySelector("#data>tbody").appendChild(row);
-
-            inp.innerText = "";
-        }
         chart = updateCode(code, chart);
     }
 
@@ -161,11 +165,15 @@ window.addEventListener("load", () => {
             /** @type {HTMLDivElement} */
             var target = e.target;
             target.parentElement.querySelector(".loading").classList.remove("hide");
-            var value = target.innerText;
+            var value = target.innerText.replace(/(^(\s*)|(\s*)$)/gm, '');
+            target.innerText = value;
 
             var d = code.data.datasets.find(d => d.label === name);
-            if (d !== undefined && d.label !== value && code.data.datasets.filter(d => d.label === d).length === 0) {
+            if (d !== undefined && name !== value && code.data.datasets.filter(d => d.label === value).length === 0) {
                 code.data.datasets.find(d => d.label === name).label = value;
+                name = value;
+            } else if (code.data.datasets.filter(d => d.label === value).length !== 0) {
+                target.innerText = name;
             }
             await sleep(100);
             target.parentElement.querySelector(".loading").classList.add("hide");

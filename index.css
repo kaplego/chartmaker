@@ -126,7 +126,6 @@ select-menu {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    z-index: 1000;
 }
 
 select-menu .placeholder:not(.selected) {
@@ -161,6 +160,7 @@ select-menu .options {
     width: calc(100% + 2 * 2px);
     min-width: fit-content;
     margin: 0 !important;
+    z-index: 1000;
 }
 
 select-menu.active .options {
