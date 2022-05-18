@@ -2,7 +2,11 @@ window.addEventListener("load", () => {
     /** @type {import("./ctypes").ChartConfiguration} */
     var code = defaults.line;
 
+    var datasets = 0;
+
     var chart = updateCode(code);
+
+    const table = document.getElementById("data");
 
     document.getElementById("chart-type").addEventListener("change",
         /** @param {Event & {detail: {old: {value: string|null, text: string, icon: string|null, index: number}, new: {value: string|null, text: string, icon: string|null, index: number}, changed: boolean}}} e */
@@ -17,52 +21,220 @@ window.addEventListener("load", () => {
             }
         }
     );
-    document.getElementById("addlabel").addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopImmediatePropagation();
+    document.getElementById("addlabel").addEventListener("click", addLabel);
+    document.getElementById("addlabelname").addEventListener("keydown", (e) => {
+        if (e.code === "Enter")
+            addLabel(e);
+    });
+
+    document.getElementById("addds").addEventListener("click", addDataset);
+    document.getElementById("adddsname").addEventListener("keydown", (e) => {
+        if (e.code === "Enter")
+            addDataset(e);
+    });
+
+    code.data.datasets.forEach(ds => addDataset(null, ds));
+
+    function addLabel(e = null) {
+        if (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
 
         /** @type {HTMLInputElement} */
         var inp = document.getElementById("addlabelname");
+        const name = inp.innerText;
 
-        if (inp.value !== "" && !code.data.labels.includes(inp.value)) {
-            code.data.labels.push(inp.value);
-            code.data.datasets.forEach(d => {
-                d.data.push(inp.value === "aab" ? 1 : 0);
-            });
+        if (name !== "" && !code.data.labels.includes(name)) {
+            code.data.labels.push(name);
 
-            var element = document.createElement("div");
-            element.classList.add("label");
-            element.id = `entry-${inp.value.toLowerCase().replace(" ", "-").replace(/[^A-Za-z0-9-]/ig, '')}`;
-            element.innerHTML = `<span class="name">${inp.value}</span><button class="removelabel">Remove</button>`;
+            var row = document.createElement("tr");
+            row.id = "labelrow-" + name;
+            var element = document.createElement("td");
+            element.classList.add("label", "editable-cell");
+            element.id = `entry-${name.toLowerCase().replace(" ", "-").replace(/[^A-Za-z0-9-]/ig, '')}`;
+            element.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="remove">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
 
-            element.querySelector("button.removelabel").addEventListener("click", (e) => {
+            element.querySelector("button.remove").addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
                 if (confirm("Are you sure to delete this label ?")) {
                     /** @type {HTMLDivElement} */
                     var target = e.target;
-                    const name = target.parentElement.querySelector("span.name").innerText;
+                    const name = target.previousElementSibling.innerText;
 
                     const i = code.data.labels.findIndex(l => l === name);
 
-                    code.data.labels.splice(i, 1);
-                    code.data.datasets.forEach(d => {
-                        d.data.splice(i, 1);
-                    });
+                    if (i >= 0) {
+                        code.data.labels.splice(i, 1);
+                        code.data.datasets.forEach(d => {
+                            d.data.splice(i, 1);
+                        });
 
-                    target.parentElement.remove();
+                        if (table.querySelector("tbody").childElementCount === 1) table.classList.add("hide");
+                        row.remove();
+                    }
                 }
             });
+            element.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
+                /** @type {HTMLDivElement} */
+                var target = e.target;
+                target.parentElement.querySelector(".loading").classList.remove("hide");
+                var value = target.innerText;
 
-            document.getElementById("data").appendChild(element);
+                var lb = code.data.labels.find(lb => lb === name);
+                if (lb !== undefined && lb !== value && !code.data.labels.includes(value)) {
+                    code.data.labels[code.data.labels.findIndex(lb => lb === name)] = value;
+                }
+                await sleep(100);
+                target.parentElement.querySelector(".loading").classList.add("hide");
+                chart = updateCode(code, chart);
+            });
 
-            inp.value = "";
+            row.appendChild(element);
+
+            code.data.datasets.forEach(d => {
+                d.data.push(name === "aab" ? 1 : 0);
+
+                let c = document.createElement("td");
+                c.classList.add("editable-cell");
+                c.innerHTML = `<div role="textbox" contenteditable spellcheck="false">0</div><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
+                c.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
+                    /** @type {HTMLDivElement} */
+                    var target = e.target;
+                    target.parentElement.querySelector(".loading").classList.remove("hide");
+                    const dsname = d.label;
+                    const lbname = name;
+                    var value = target.innerText;
+
+                    var ds = code.data.datasets.find(ds => ds.label === dsname);
+                    if (ds !== undefined && !Number.isNaN(Number(value)) && ds.data[code.data.labels.findIndex(l => l === lbname)] !== Number(value)) {
+                        code.data.datasets.find(ds => ds.label === dsname).data[code.data.labels.findIndex(l => l === lbname)] = Number(value);
+                        target.innerText = Number(value).toString();
+                    }
+                    await sleep(100);
+                    target.parentElement.querySelector(".loading").classList.add("hide");
+                    chart = updateCode(code, chart);
+                });
+                row.appendChild(c);
+            });
+            row.appendChild(document.createElement("td"));
+
+            document.querySelector("#data>tbody").appendChild(row);
+
+            inp.innerText = "";
         }
-    });
-
-    document.getElementById("update").addEventListener("click", async(e) => {
-        e.preventDefault();
         chart = updateCode(code, chart);
-    })
+    }
+
+    /**
+     * 
+     * @param {SubmitEvent} e 
+     * @param {Chart.ChartDataSets} dataset 
+     */
+    function addDataset(e = null, dataset = null) {
+        if (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
+
+        if (dataset) {
+            var name = dataset.label;
+        } else {
+            /** @type {HTMLInputElement} */
+            var inp = document.getElementById("adddsname");
+            var name = inp.innerText;
+            if (code.data.datasets.find(ds => ds.label === name) !== undefined) return;
+        }
+        /** @type {Chart.ChartDataSets} */
+        var ds = {
+            label: name,
+            data: []
+        };
+
+        var th = document.createElement("th");
+        th.classList.add("editable-cell");
+        th.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="remove">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
+
+        th.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
+            /** @type {HTMLDivElement} */
+            var target = e.target;
+            target.parentElement.querySelector(".loading").classList.remove("hide");
+            var value = target.innerText;
+
+            var d = code.data.datasets.find(d => d.label === name);
+            if (d !== undefined && d.label !== value && code.data.datasets.filter(d => d.label === d).length === 0) {
+                code.data.datasets.find(d => d.label === name).label = value;
+            }
+            await sleep(100);
+            target.parentElement.querySelector(".loading").classList.add("hide");
+            chart = updateCode(code, chart);
+        });
+
+        document.querySelector("#data>thead>tr:first-child").insertBefore(th, document.querySelector("#data>thead>tr:first-child").lastElementChild);
+
+        var tf = document.createElement("th");
+        document.querySelector("#data>tfoot>tr:last-child").insertBefore(tf, document.querySelector("#data>tfoot>tr:last-child").lastElementChild);
+
+        code.data.labels.forEach(d => {
+            var row = document.getElementById(`labelrow-${d}`);
+            var td = document.createElement("td");
+            td.id = `labelds-${name}`;
+            td.classList.add("editable-cell");
+            td.innerHTML = `<div role="textbox" contenteditable spellcheck="false">0</div><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
+            td.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
+                /** @type {HTMLDivElement} */
+                var target = e.target;
+                target.parentElement.querySelector(".loading").classList.remove("hide");
+                const dsname = name;
+                const lbname = d;
+                var value = target.innerText;
+
+                var ds = code.data.datasets.find(ds => ds.label === dsname);
+                if (ds !== undefined && !Number.isNaN(Number(value)) && ds.data[code.data.labels.findIndex(l => l === lbname)] !== Number(value)) {
+                    code.data.datasets.find(ds => ds.label === dsname).data[code.data.labels.findIndex(l => l === lbname)] = Number(value);
+                    target.innerText = Number(value).toString();
+                }
+                await sleep(100);
+                target.parentElement.querySelector(".loading").classList.add("hide");
+                chart = updateCode(code, chart);
+            });
+            row.insertBefore(td, row.lastElementChild);
+            ds.data.push(0);
+        });
+
+        th.querySelector("button.remove").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            if (confirm("Are you sure to delete this dataset ?")) {
+                /** @type {HTMLDivElement} */
+                var target = e.target;
+                const name = target.previousElementSibling.innerText;
+
+                const i = code.data.datasets.findIndex(l => l.label === name);
+
+                if (i >= 0) {
+                    code.data.datasets.splice(i, 1);
+
+                    document.querySelectorAll(`#labelds-${name}`).forEach(e => e.remove());
+                    tf.remove();
+                    th.remove();
+                }
+            }
+        });
+
+        if (!dataset) {
+            inp.innerText = '';
+            chart.data.datasets.push(ds);
+
+            chart = updateCode(code, chart);
+        }
+    }
+
+    // document.getElementById("update").addEventListener("click", async(e) => {
+    //     e.preventDefault();
+    //     chart = updateCode(code, chart);
+    // })
 });

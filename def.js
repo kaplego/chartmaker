@@ -120,7 +120,7 @@ const defaults = {
             "labels": [],
             "datasets": [
             {
-                "label": "",
+                "label": "Example dataset",
                 "data": []
             }]
         },

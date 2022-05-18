@@ -40,15 +40,31 @@
                 </li>
             </ul>
         </select-menu>
-        <div class="input-row">
-            <input type="text" id="addlabelname" placeholder="Label name" class="input">
-            <button id="addlabel" class="input">Add</button>
-        </div>
-        <div id="data">
-
-        </div>
-
-        <button id="update" type="button" class="input">Update chart</button>
+        <table id="data">
+            <thead>
+                <tr>
+                    <th style="border: none;"></th>
+                    <th style="border-bottom-width: 2px;">
+                        <div style="display: flex;align-items: center;">
+                            <span id="adddsname" role="textbox" contenteditable spellcheck="false" aria-placeholder="Dataset name" style="margin: 3px;margin-right: 0;"></span><button id="addds" class="input input-sm" style="margin: 3px;"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr></tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        <div style="display: flex;align-items: center;">
+                            <span id="addlabelname" role="textbox" contenteditable spellcheck="false" aria-placeholder="Label name" style="margin: 3px;margin-right: 0;"></span><button id="addlabel" class="input input-sm" style="margin: 3px;"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 
     <script src="def.js"></script>

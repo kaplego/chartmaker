@@ -10,9 +10,10 @@
 }
 
 .input {
+    --padding-x: 10px;
     background: #f2f2f2;
     color: #333;
-    padding: 10px 15px;
+    padding: var(--padding-x) calc(var(--padding-x) / 2 * 3);
     border: 2px solid transparent;
     border-radius: 3px;
     outline: 0;
@@ -22,14 +23,23 @@
     font-size: 15px;
 }
 
+.input.input-sm {
+    padding: calc(var(--padding-x) / 2) calc(var(--padding-x) / 2 / 2 * 3);
+}
+
 :not(button).input:not([type=submit]):not([type=button]):not(:disabled):hover {
     border-color: #d3d3d3;
 }
 
-.input:not(:disabled):active,
-.input:not(:disabled):focus {
-    background: transparent;
-    border: 2px solid var(--accent) !important;
+.input:not([type=submit]):not([type=button]):not(button):focus {
+    border-color: var(--accent) !important;
+    background-color: white !important;
+}
+
+.input[type=submit]:not(:disabled):active,
+.input[type=button]:not(:disabled):active,
+button.input:not(:disabled):active {
+    border-color: rgba(var(--accent-rgb), .3) !important;
 }
 
 .input[type=submit],
@@ -116,6 +126,7 @@ select-menu {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    z-index: 1000;
 }
 
 select-menu .placeholder:not(.selected) {
@@ -183,6 +194,125 @@ select-menu.active .options {
     color: #333;
 }
 
+span[role=text],
+span[role=textbox] {
+    display: inline-block;
+    font-weight: 400;
+    font-size: calc(1em * 0.833333125);
+    padding: 2px 4px;
+    min-width: 6px;
+    max-width: 160px;
+    overflow: auto hidden;
+    scrollbar-width: none;
+    white-space: nowrap;
+    -webkit-line-clamp: 1;
+    cursor: text;
+    border: 2px solid #f2f2f2;
+    border-radius: 3px;
+    outline: none;
+    transition: border-color 150ms;
+}
+
+th.editable-cell,
+td.editable-cell {
+    position: relative;
+    padding: 0;
+}
+
+th.editable-cell>div[contenteditable],
+td.editable-cell>div[contenteditable] {
+    position: relative;
+    font-weight: 400;
+    font-size: calc(1em * 0.833333125);
+    padding: 2px 4px;
+    min-width: 6px;
+    max-width: 160px;
+    overflow: scroll hidden;
+    scrollbar-width: none;
+    white-space: nowrap;
+    -webkit-line-clamp: 1;
+    cursor: text;
+    outline: none;
+    transition: color 150ms;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: #3c3c3c;
+}
+
+th.editable-cell>div[contenteditable]:not(:hover):not(:focus),
+td.editable-cell>div[contenteditable]:not(:hover):not(:focus) {
+    color: #8b8b8b;
+}
+
+th.editable-cell>button.remove,
+td.editable-cell>button.remove {
+    position: absolute;
+    top: 0;
+    left: -2px;
+    transform: translateY(-100%);
+    padding: 2px 4px;
+    border: none;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    background-color: #fe6969;
+    transition: background-color 150ms;
+    cursor: pointer;
+    display: none;
+}
+
+th.editable-cell:hover>button.remove,
+td.editable-cell:hover>button.remove {
+    display: block;
+}
+
+th.editable-cell>button.remove:hover,
+td.editable-cell>button.remove:hover {
+    background-color: #ffaaaa;
+}
+
+th.editable-cell.left>button.remove,
+td.editable-cell.left>button.remove {
+    top: -2px;
+    left: 0;
+    transform: translateX(-100%);
+    border-radius: 0;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+th.editable-cell>.loading,
+td.editable-cell>.loading {
+    display: block;
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: .85rem;
+}
+
+th.editable-cell>.loading.hide,
+td.editable-cell>.loading.hide {
+    display: none;
+}
+
+span[role=text]:hover,
+span[role=textbox]:hover {
+    border-color: #d3d3d3;
+}
+
+span[role=text]:focus,
+span[role=textbox]:focus {
+    border-color: var(--accent);
+}
+
+span[role=text][aria-placeholder]:empty::before,
+span[role=textbox][aria-placeholder]:empty::before {
+    content: attr(aria-placeholder);
+    color: lightgray;
+    /* visibility: hidden; */
+}
+
 body {
     display: grid;
     grid-template-columns: repeat(10, 10%);
@@ -239,4 +369,46 @@ body {
 
 #form>* {
     width: max-content;
+}
+
+#data {
+    border-collapse: collapse;
+    border-radius: 4px;
+}
+
+#data.hide {
+    display: none;
+}
+
+#data tr {
+    height: 100%;
+}
+
+#data tbody:first-child>tr:first-child>td:first-child,
+#data thead:first-child>tr:first-child>th:first-child {
+    border-top-left-radius: 4px;
+}
+
+#data tbody:first-child>tr:first-child>td:last-child,
+#data thead:first-child>tr:first-child>th:last-child {
+    border-top-right-radius: 4px;
+}
+
+#data td,
+#data th {
+    border: 2px solid #d3d3d3;
+    vertical-align: middle;
+    height: 100%;
+    min-width: 40px;
+}
+
+#data td:not(:last-child),
+#data th:not(:last-child) {
+    border-right-width: 0;
+}
+
+#data tbody:not(:last-child) td,
+#data thead:not(:last-child) th,
+#data tfoot:not(:last-child) th {
+    border-bottom-width: 0;
 }
