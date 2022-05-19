@@ -113,6 +113,11 @@ Rainbow.extend('json', [{
 }]);
 Rainbow.color();
 
+/**
+ * @type {{
+ *  [type: string]: Chart
+ * }}
+ */
 const defaults = {
     line: {
         "type": "line",
