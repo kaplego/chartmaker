@@ -75,6 +75,7 @@ window.addEventListener("load", () => {
                     if (table.querySelector("tbody").childElementCount === 1) table.classList.add("hide");
                     row.remove();
                 }
+                chart = updateCode(code, chart);
             }
         });
         element.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
@@ -230,6 +231,7 @@ window.addEventListener("load", () => {
                     tf.remove();
                     th.remove();
                 }
+                chart = updateCode(code, chart);
             }
         });
 
