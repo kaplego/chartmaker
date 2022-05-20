@@ -44,9 +44,9 @@
             <thead>
                 <tr>
                     <th style="border: none;"></th>
-                    <th style="border-bottom-width: 2px;">
+                    <th>
                         <div style="display: flex;align-items: center;">
-                            <span id="adddsname" role="textbox" contenteditable spellcheck="false" aria-placeholder="Dataset name" style="margin: 3px;margin-right: 0;"></span><button id="addds" class="input input-sm" style="margin: 3px;"><i class="fas fa-plus"></i></button>
+                            <span id="adddsname" class="gh-input" role="textbox" contenteditable spellcheck="false" aria-placeholder="Dataset name" style="margin: 3px;margin-right: 0;"></span><button id="addds" class="gh-button" style="margin: 3px;"><i class="fas fa-plus"></i></button>
                         </div>
                     </th>
                 </tr>
@@ -58,13 +58,17 @@
                 <tr>
                     <th>
                         <div style="display: flex;align-items: center;">
-                            <span id="addlabelname" role="textbox" contenteditable spellcheck="false" aria-placeholder="Label name" style="margin: 3px;margin-right: 0;"></span><button id="addlabel" class="input input-sm" style="margin: 3px;"><i class="fas fa-plus"></i></button>
+                            <span id="addlabelname" class="gh-input" role="textbox" contenteditable spellcheck="false" aria-placeholder="Label name" style="margin: 3px;margin-right: 0;"></span><button id="addlabel" class="gh-button" style="margin: 3px;"><i class="fas fa-plus"></i></button>
                         </div>
                     </th>
-                    <th></th>
+                    <th class="nb-left nb-top"></th>
                 </tr>
             </tfoot>
         </table>
+    </div>
+
+    <div id="dataset-editor">
+
     </div>
 
     <script src="def.js"></script>

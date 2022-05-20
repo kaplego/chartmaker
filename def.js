@@ -1,5 +1,20 @@
 const __ACCENT = "#ffc500";
 
+const _ = {
+    accent: "#ffc500",
+    accent_rgb: "255,197,0",
+    first_background: "#0d1117",
+    second_background: "#161b22",
+    third_background: "#21262d",
+    first_foreground: "#c9d1d9",
+    second_foreground: "#8b949e",
+    link: "#58a6ff",
+    placeholder: "#6e7681",
+    btn_border: "#f0f6fc1a",
+    btn_hov_border: "#30363d",
+    btn_hov_bg: "#30363d"
+};
+
 /**
  * @param {HTMLElement} parent 
  * @param  {...HTMLElement} nodes 
@@ -173,7 +188,7 @@ const defaults = {
                         "showLabelBackdrop": false,
                         "backdropColor": "rgba(255, 255, 255, 0.75)",
                         "backdropPadding": 2,
-                        "color": "#666"
+                        "color": _.second_foreground
                     },
                     "display": true,
                     "offset": false,
@@ -192,8 +207,8 @@ const defaults = {
                         "borderDash": [],
                         "borderDashOffset": 0,
                         "borderWidth": 1,
-                        "color": "rgba(0,0,0,0.1)",
-                        "borderColor": "rgba(0,0,0,0.1)"
+                        "color": _.btn_hov_border,
+                        "borderColor": _.btn_hov_border
                     },
                     "title": {
                         "display": false,
@@ -202,7 +217,7 @@ const defaults = {
                             "top": 4,
                             "bottom": 4
                         },
-                        "color": "#666"
+                        "color": _.first_foreground
                     },
                     "id": "x",
                     "position": "bottom"
@@ -228,7 +243,7 @@ const defaults = {
                         "showLabelBackdrop": false,
                         "backdropColor": "rgba(255, 255, 255, 0.75)",
                         "backdropPadding": 2,
-                        "color": "#666"
+                        "color": _.second_foreground
                     },
                     "display": true,
                     "offset": false,
@@ -247,8 +262,8 @@ const defaults = {
                         "borderDash": [],
                         "borderDashOffset": 0,
                         "borderWidth": 1,
-                        "color": "rgba(0,0,0,0.1)",
-                        "borderColor": "rgba(0,0,0,0.1)"
+                        "color": _.btn_border,
+                        "borderColor": _.btn_border
                     },
                     "title": {
                         "display": false,
@@ -257,7 +272,7 @@ const defaults = {
                             "top": 4,
                             "bottom": 4
                         },
-                        "color": "#666"
+                        "color": _.first_foreground
                     },
                     "id": "y",
                     "position": "left"

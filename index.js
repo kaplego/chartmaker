@@ -53,9 +53,9 @@ window.addEventListener("load", () => {
         var element = document.createElement("td");
         element.classList.add("label", "editable-cell");
         element.id = `entry-${name.toLowerCase().replace(" ", "-").replace(/[^A-Za-z0-9-]/ig, '')}`;
-        element.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="remove">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
+        element.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="edit">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
 
-        element.querySelector("button.remove").addEventListener("click", (e) => {
+        element.querySelector("button.edit").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
 
@@ -124,7 +124,9 @@ window.addEventListener("load", () => {
             });
             row.appendChild(c);
         });
-        row.appendChild(document.createElement("td"));
+        var lasttd = document.createElement("td");
+        lasttd.classList.add("nb-top");
+        row.appendChild(lasttd);
 
         document.querySelector("#data>tbody").appendChild(row);
 
@@ -160,30 +162,33 @@ window.addEventListener("load", () => {
 
         var th = document.createElement("th");
         th.classList.add("editable-cell");
-        th.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="remove">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
+        th.innerHTML = `<div role="textbox" contenteditable spellcheck="false">${name}</div><button class="edit">Remove</button><div class="loading hide"><i class="fas fa-loader fa-spin"></i></div>`;
 
         th.querySelector("div[role='textbox']").addEventListener("blur", async(e) => {
             /** @type {HTMLDivElement} */
             var target = e.target;
-            target.parentElement.querySelector(".loading").classList.remove("hide");
             var value = target.innerText.replace(/(^(\s*)|(\s*)$)/gm, '');
             target.innerText = value;
 
-            var d = code.data.datasets.find(d => d.label === name);
-            if (d !== undefined && name !== value && code.data.datasets.filter(d => d.label === value).length === 0) {
-                code.data.datasets.find(d => d.label === name).label = value;
-                name = value;
-            } else if (code.data.datasets.filter(d => d.label === value).length !== 0) {
-                target.innerText = name;
+            if (value != name) {
+                target.parentElement.querySelector(".loading").classList.remove("hide");
+                var d = code.data.datasets.find(d => d.label === name);
+                if (d !== undefined && name !== value && code.data.datasets.filter(d => d.label === value).length === 0) {
+                    code.data.datasets.find(d => d.label === name).label = value;
+                    name = value;
+                } else if (code.data.datasets.filter(d => d.label === value).length !== 0) {
+                    target.innerText = name;
+                }
+                await sleep(100);
+                target.parentElement.querySelector(".loading").classList.add("hide");
+                chart = updateCode(code, chart);
             }
-            await sleep(100);
-            target.parentElement.querySelector(".loading").classList.add("hide");
-            chart = updateCode(code, chart);
         });
 
         document.querySelector("#data>thead>tr:first-child").insertBefore(th, document.querySelector("#data>thead>tr:first-child").lastElementChild);
 
         var tf = document.createElement("th");
+        tf.classList.add("nb-left");
         document.querySelector("#data>tfoot>tr:last-child").insertBefore(tf, document.querySelector("#data>tfoot>tr:last-child").lastElementChild);
 
         code.data.labels.forEach(d => {
@@ -213,7 +218,7 @@ window.addEventListener("load", () => {
             ds.data.push(0);
         });
 
-        th.querySelector("button.remove").addEventListener("click", (e) => {
+        th.querySelector("button.edit").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
 

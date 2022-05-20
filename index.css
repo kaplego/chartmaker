@@ -3,10 +3,84 @@
 :root {
     --accent: #ffc500;
     --accent-rgb: 255, 197, 0;
+    --first-background: #0d1117;
+    --first-foreground: #c9d1d9;
+    --second-background: #161b22;
+    --second-foreground: #8b949e;
+    --third-background: #21262d;
+    --link: #58a6ff;
+    --placeholder: #6e7681;
+    --first-padding: 5px 12px;
+    --second-padding: 3px 12px;
+    --third-padding: 5px 10px;
+    --radius: 6px;
+    --border-width: 0.8px;
+    --btn-border-color: #f0f6fc1a;
+    --btn-hov-bg: #30363d;
+    --btn-hov-border-color: var(--second-foreground);
+    --inp-border-color: #30363d;
 }
 
 * {
     box-sizing: border-box;
+}
+
+body {
+    background-color: var(--first-background);
+    color: var(--first-foreground);
+}
+
+a[href] {
+    color: var(--link);
+}
+
+.gh-input {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 13px;
+    padding: var(--first-padding);
+    border-radius: var(--radius);
+    background-color: var(--third-background);
+    color: var(--first-foreground);
+    border: var(--border-width) solid var(--inp-border-color) !important;
+    transition-duration: 0.08s;
+    transition-property: color, background-color, box-shadow, border-color, outline;
+    transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    outline: none;
+    cursor: text !important;
+}
+
+.gh-input::placeholder,
+.gh-input::-moz-placeholder,
+.gh-input::-webkit-input-placeholder,
+span[role=text][aria-placeholder]:empty::before,
+span[role=textbox][aria-placeholder]:empty::before {
+    color: var(--placeholder);
+    opacity: 1;
+}
+
+.gh-input:focus {
+    background-color: transparent;
+    /* outline: var(--first-border-width) solid var(--inp-foc-border-color); */
+    border-color: var(--link) !important;
+}
+
+.gh-button {
+    font-size: 13px;
+    padding: var(--first-padding);
+    border-radius: var(--radius);
+    background-color: var(--third-background);
+    color: var(--first-foreground);
+    border: var(--border-width) solid var(--btn-border-color);
+    transition-duration: 0.1s;
+    transition-property: color, background-color, box-shadow, border-color;
+    transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    cursor: pointer;
+}
+
+.gh-button:hover {
+    background-color: var(--btn-hov-bg);
+    border-color: var(--btn-hov-border-color);
 }
 
 .input {
@@ -194,7 +268,8 @@ select-menu.active .options {
     color: #333;
 }
 
-span[role=text],
+
+/* span[role=text],
 span[role=textbox] {
     display: inline-block;
     font-weight: 400;
@@ -211,7 +286,7 @@ span[role=textbox] {
     border-radius: 3px;
     outline: none;
     transition: border-color 150ms;
-}
+} */
 
 th.editable-cell,
 td.editable-cell {
@@ -224,7 +299,7 @@ td.editable-cell>div[contenteditable] {
     position: relative;
     font-weight: 400;
     font-size: calc(1em * 0.833333125);
-    padding: 2px 4px;
+    padding: var(--third-padding);
     min-width: 6px;
     max-width: 160px;
     overflow: scroll hidden;
@@ -237,16 +312,16 @@ td.editable-cell>div[contenteditable] {
     height: 100%;
     display: flex;
     align-items: center;
-    color: #3c3c3c;
+    color: var(--first-foreground);
 }
 
 th.editable-cell>div[contenteditable]:not(:hover):not(:focus),
 td.editable-cell>div[contenteditable]:not(:hover):not(:focus) {
-    color: #8b8b8b;
+    color: var(--placeholder);
 }
 
-th.editable-cell>button.remove,
-td.editable-cell>button.remove {
+th.editable-cell>button.edit,
+td.editable-cell>button.edit {
     position: absolute;
     top: 0;
     left: -2px;
@@ -261,18 +336,18 @@ td.editable-cell>button.remove {
     display: none;
 }
 
-th.editable-cell:hover>button.remove,
-td.editable-cell:hover>button.remove {
+th.editable-cell:hover>button.edit,
+td.editable-cell:hover>button.edit {
     display: block;
 }
 
-th.editable-cell>button.remove:hover,
-td.editable-cell>button.remove:hover {
+th.editable-cell>button.edit:hover,
+td.editable-cell>button.edit:hover {
     background-color: #ffaaaa;
 }
 
-th.editable-cell.left>button.remove,
-td.editable-cell.left>button.remove {
+th.editable-cell.left>button.edit,
+td.editable-cell.left>button.edit {
     top: -2px;
     left: 0;
     transform: translateX(-100%);
@@ -309,7 +384,6 @@ span[role=textbox]:focus {
 span[role=text][aria-placeholder]:empty::before,
 span[role=textbox][aria-placeholder]:empty::before {
     content: attr(aria-placeholder);
-    color: lightgray;
     /* visibility: hidden; */
 }
 
@@ -342,8 +416,8 @@ body {
 
 #jscode pre {
     display: block;
-    color: #D4D4D4;
-    background: #1E1E1E;
+    color: var(--second-foreground);
+    background: var(--second-background);
     border-radius: 4px;
     padding: 1em !important;
     border: 1px solid rgb(211, 220, 228);
@@ -396,10 +470,20 @@ body {
 
 #data td,
 #data th {
-    border: 2px solid #d3d3d3;
+    border: 1px solid var(--second-foreground);
     vertical-align: middle;
     height: 100%;
     min-width: 40px;
+}
+
+#data td.nb-top,
+#data th.nb-top {
+    border-top: none;
+}
+
+#data td.nb-left,
+#data th.nb-left {
+    border-left: none;
 }
 
 #data td:not(:last-child),
