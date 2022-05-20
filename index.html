@@ -24,19 +24,22 @@
     </div>
     <div id="form">
         <select-menu id="chart-type">
-            <div class="select-btn input">
-                <span class="placeholder">Chart type</span><i class="far fa-chevron-down"></i>
+            <div class="select-btn gh-button">
+                <span class="placeholder">Chart type</span><i class="fas fa-caret-down gh-dd-icon"></i>
             </div>
 
             <ul class="options">
+                <li class="option text">
+                    Select the chart type:
+                </li>
                 <li class="option" data-value="line" data-selected>
-                    <i class="fas fa-chart-line"></i> Line chart
+                    <i class="fal fa-chart-line"></i> Line chart
                 </li>
                 <li class="option" data-value="bar" data-disabled>
-                    <i class="fas fa-chart-column"></i> Bar chart
+                    <i class="fal fa-chart-column"></i> Bar chart
                 </li>
                 <li class="option" data-value="pie" data-disabled>
-                    <i class="fas fa-chart-pie"></i> Pie chart
+                    <i class="fal fa-chart-pie"></i> Pie chart
                 </li>
             </ul>
         </select-menu>
@@ -45,8 +48,9 @@
                 <tr>
                     <th style="border: none;"></th>
                     <th>
-                        <div style="display: flex;align-items: center;">
-                            <span id="adddsname" class="gh-input" role="textbox" contenteditable spellcheck="false" aria-placeholder="Dataset name" style="margin: 3px;margin-right: 0;"></span><button id="addds" class="gh-button" style="margin: 3px;"><i class="fas fa-plus"></i></button>
+                        <div style="align-items: center;" class="gh-form-group">
+                            <span id="adddsname" class="gh-input" role="textbox" contenteditable spellcheck="false" aria-placeholder="Dataset name" style="margin: 3px;margin-right: 0;"></span>
+                            <button id="addds" class="gh-button" style="margin: 3px;"><i class="fas fa-plus"></i></button>
                         </div>
                     </th>
                 </tr>
@@ -57,7 +61,7 @@
             <tfoot>
                 <tr>
                     <th>
-                        <div style="display: flex;align-items: center;">
+                        <div style="align-items: center;" class="gh-form-group">
                             <span id="addlabelname" class="gh-input" role="textbox" contenteditable spellcheck="false" aria-placeholder="Label name" style="margin: 3px;margin-right: 0;"></span><button id="addlabel" class="gh-button" style="margin: 3px;"><i class="fas fa-plus"></i></button>
                         </div>
                     </th>

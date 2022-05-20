@@ -9,7 +9,7 @@ class SelectMenu extends HTMLElement {
             await sleep(1);
 
             const selectBtn = _this.querySelector(".select-btn"),
-                options = _this.querySelectorAll(".option"),
+                options = _this.querySelectorAll(".option:not(.text)"),
                 placeholder = _this.querySelector(".placeholder");
 
             (function() {

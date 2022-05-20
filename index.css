@@ -5,6 +5,7 @@
     --accent-rgb: 255, 197, 0;
     --first-background: #0d1117;
     --first-foreground: #c9d1d9;
+    --first-foreground-rgb: 201, 209, 217;
     --second-background: #161b22;
     --second-foreground: #8b949e;
     --third-background: #21262d;
@@ -37,10 +38,11 @@ a[href] {
 .gh-input {
     display: inline-block;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 20px;
     padding: var(--first-padding);
     border-radius: var(--radius);
-    background-color: var(--third-background);
+    background-color: #010409;
     color: var(--first-foreground);
     border: var(--border-width) solid var(--inp-border-color) !important;
     transition-duration: 0.08s;
@@ -60,13 +62,16 @@ span[role=textbox][aria-placeholder]:empty::before {
 }
 
 .gh-input:focus {
-    background-color: transparent;
-    /* outline: var(--first-border-width) solid var(--inp-foc-border-color); */
+    background-color: var(--first-background);
+    outline: var(--border-width) solid var(--link);
+    outline-offset: calc(0px - var(--border-width));
+    z-index: 1;
     border-color: var(--link) !important;
 }
 
 .gh-button {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 20px;
     padding: var(--first-padding);
     border-radius: var(--radius);
     background-color: var(--third-background);
@@ -76,11 +81,51 @@ span[role=textbox][aria-placeholder]:empty::before {
     transition-property: color, background-color, box-shadow, border-color;
     transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
     cursor: pointer;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 500;
 }
 
-.gh-button:hover {
+.gh-button:hover,
+.gh-button.hover {
     background-color: var(--btn-hov-bg);
     border-color: var(--btn-hov-border-color);
+}
+
+.gh-form-group {
+    display: flex;
+}
+
+.gh-form-group>.gh-input:not(:first-child),
+.gh-form-group>.gh-button:not(:first-child) {
+    margin-left: 0 !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.gh-form-group>.gh-input:not(:last-child),
+.gh-form-group>.gh-button:not(:last-child) {
+    margin-right: 0 !important;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.gh-form-group>.gh-input:first-child {
+    border-right: none !important;
+}
+
+.gh-form-group>.gh-input:last-child {
+    border-left: none !important;
+}
+
+.gh-form-group>.gh-input:not(:first-child):not(:last-child) {
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.gh-dd-icon {
+    margin-left: 8px;
+    margin-right: -4px;
+    transition: transform 280ms cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .input {
@@ -196,10 +241,6 @@ input:disabled {
 select-menu {
     position: relative;
     margin: 5px 0;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 select-menu .placeholder:not(.selected) {
@@ -218,23 +259,28 @@ select-menu .placeholder:not(.selected) {
     margin-left: 6px;
 }
 
-select-menu.active .select-btn i.far.fa-chevron-down {
+select-menu.active .gh-dd-icon {
     transform: rotate(-180deg);
 }
 
+select-menu.active .select-btn {
+    background-color: var(--btn-hov-bg);
+    border-color: var(--btn-hov-border-color);
+}
+
 select-menu .options {
+    padding: 0;
     position: absolute;
-    padding: 8px 0;
     top: calc(100% + 4px);
     left: -2px;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    background: #fff;
+    border-radius: 6px;
+    background: var(--second-background);
     display: none;
-    width: calc(100% + 2 * 2px);
-    min-width: fit-content;
+    min-width: 300px;
+    width: max-content;
     margin: 0 !important;
     z-index: 1000;
+    border: var(--border-width) solid var(--inp-border-color);
 }
 
 select-menu.active .options {
@@ -242,26 +288,39 @@ select-menu.active .options {
 }
 
 .options .option {
-    display: flex;
+    display: block;
     cursor: pointer;
-    padding: 8px 12px;
-    align-items: center;
-    background: #fff;
-    font-size: 15px;
+    padding: 7px 16px;
+    line-height: 18px;
+    background: var(--second-background);
+    border-bottom: 1px solid var(--third-background);
+    color: var(--first-foreground);
+    font-size: 12px;
+    transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
+    transition-property: color, background-color, box-shadow, border-color;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.options .option:not(.text) {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .options .option[data-disabled]:not([data-disabled="false"]) {
-    background-color: #f2f2f2 !important;
-    color: #8b8b8b !important;
+    color: var(--second-foreground) !important;
     cursor: default !important;
+    pointer-events: none;
 }
 
-.options .option:hover {
-    background: #f2f2f2;
+.options .option.text {
+    cursor: auto;
+    font-weight: 600;
 }
 
-.option i {
-    margin-right: 12px;
+.options .option:not(.text):hover {
+    background: var(--third-background);
 }
 
 .option .option-text {
